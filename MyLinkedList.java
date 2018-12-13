@@ -1,13 +1,30 @@
+import java.util.NoSuchElementException;
+import java.lang.IndexOutOfBoundsException;
 public class MyLinkedList{
  private int size;
  private Node start,end;
 
  public static void main(String[] args){
-   MyLinkedList list = new MyLinkedList();
-   System.out.println(list.toString());
-   list.add(4);
-   list.add(23);
-   System.out.println(list.toString());
+   try{
+     MyLinkedList list = new MyLinkedList();
+     System.out.println(list.toString());
+     list.add(4);
+     list.add(23);
+     System.out.println(list.toString());
+     System.out.println("" + list.size());
+     System.out.println("0th index: " + list.get(0));
+     System.out.println("1st index: " + list.get(1));
+     //System.out.println("2nd index: " + list.get(2));
+     list.set(1, 34);
+     System.out.println("set 1st index to 34, proof: " + list.get(1));
+     System.out.println(list.toString());
+     System.out.println("Does this list contain 4?: " + list.contains(4));
+     System.out.println("What about 5?: " + list.contains(5));
+     System.out.println("What's the index of 34?: " + list.indexOf(34));
+     System.out.println("What's the index of 568?: " + list.indexOf(568));
+   }catch(IndexOutOfBoundsException e){
+     System.out.println(e);
+   }
  }
 
  public MyLinkedList(){
@@ -33,9 +50,48 @@ public class MyLinkedList{
      end = toAdd;
    }
    size+=1;
-   System.out.println("added " + toAdd.toString());
    return true;
  }
+
+ private Node getNthNode(int nth) throws IndexOutOfBoundsException{
+   if (nth >= size || nth < 0){
+     throw new IndexOutOfBoundsException("requested index out of bounds: " + nth);
+   }
+   Node current = start;
+   for (int currentIndex = 0; currentIndex < nth; currentIndex++){
+     current = current.next();
+   }
+   return current;
+ }
+
+ public Integer get(int i){
+   return getNthNode(i).getData();
+ }
+
+ public Integer set(int i, Integer value){
+   Integer toReturn = this.get(i);
+   getNthNode(i).setData(value);
+   return toReturn;
+ }
+
+ public boolean contains(Integer value){
+   for (int i = 0; i<size; i++){
+     if (this.get(i).equals(value)){
+       return true;
+     }
+   }
+   return false;
+ }
+
+ public int indexOf(Integer value){
+   for (int i = 0; i<size; i++){
+     if (this.get(i).equals(value)){
+       return i;
+     } 
+   }
+   return -1;
+ }
+
  public String toString(){
    String toReturn;
    if (start == null && end == null){
@@ -46,11 +102,8 @@ public class MyLinkedList{
      toReturn = "{" + start.toString() + "}";
      return toReturn;
    }
-   System.out.println("at line 49");
    Node current = start.next();
-   System.out.println("at line 51");
    toReturn = "{" + start.toString();
-   System.out.println("at line 53");
    while (current != null){
      toReturn += ", " + current.toString();
      current = current.next();
