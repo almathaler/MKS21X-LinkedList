@@ -22,6 +22,14 @@ public class MyLinkedList{
      System.out.println("What about 5?: " + list.contains(5));
      System.out.println("What's the index of 34?: " + list.indexOf(34));
      System.out.println("What's the index of 568?: " + list.indexOf(568));
+     list.add(1, 65);
+     System.out.println("Added 65: " + list.toString());
+     System.out.println("Current size: " + list.size());
+     list.remove(1);
+     System.out.println("Removed 65: " + list.toString());
+     Integer intObj1 = new Integer(34);
+     list.remove(intObj1);
+     System.out.println("Removed 34 using remove by type: " + list.toString());
    }catch(IndexOutOfBoundsException e){
      System.out.println(e);
    }
@@ -33,6 +41,10 @@ public class MyLinkedList{
    end = null;
  }
 
+ public void clear(){
+    start = null;
+    end = null;
+ }
  public int size(){
    return size;
  }
@@ -64,11 +76,17 @@ public class MyLinkedList{
    return current;
  }
 
- public Integer get(int i){
+ public Integer get(int i) throws IndexOutOfBoundsException{
+   if (i >= size || i < 0){
+     throw new IndexOutOfBoundsException("GETrequested index out of bounds: " + i);
+   }
    return getNthNode(i).getData();
  }
 
- public Integer set(int i, Integer value){
+ public Integer set(int i, Integer value) throws IndexOutOfBoundsException{
+   if (i >= size || i < 0){
+     throw new IndexOutOfBoundsException("SETrequested index out of bounds: " + i);
+   }
    Integer toReturn = this.get(i);
    getNthNode(i).setData(value);
    return toReturn;
@@ -87,9 +105,52 @@ public class MyLinkedList{
    for (int i = 0; i<size; i++){
      if (this.get(i).equals(value)){
        return i;
-     } 
+     }
    }
    return -1;
+ }
+
+ public void add(int index,Integer value){
+   if (index >= size || index<0){
+     throw new IndexOutOfBoundsException("ADDrequested index out of bounds: " + index);
+   }
+   Node toAdd = new Node(value, this.getNthNode(index), this.getNthNode(index-1));
+   this.getNthNode(index).setPrev(toAdd);
+   this.getNthNode(index-1).setNext(toAdd);
+   size+=1;
+ }
+
+ public Integer remove(int index) throws IndexOutOfBoundsException{
+   if (index >= size || index<0){
+     throw new IndexOutOfBoundsException("REMOVErequested index out of bounds: " + index);
+   }
+   Integer toReturn = this.get(index);
+   if (index == size-1){
+     end = end.prev();
+   }
+   else if (index == 0){
+     start = start.next();
+   }
+   else{
+     //you have to reset the prev first, because getNthNode depends on the setNext to get node. once you setNext from the previous
+     //to pass over the current one, (index+1) is now out of bounds in some cases, like removing a middle element from a list of length 3
+     getNthNode(index+1).setPrev(getNthNode(index-1));
+     getNthNode(index-1).setNext(getNthNode(index+1));
+     //getNthNode(index+1).setPrev(getNthNode(index-1));
+   }
+   size-=1;
+   return toReturn;
+ }
+
+ public boolean remove(Integer value){
+   //this function is 0[n^2] !!! so slow
+   try{
+     remove(this.indexOf(value));
+   }catch(IndexOutOfBoundsException e){
+     return false;
+   }
+   size-=1;
+   return true;
  }
 
  public String toString(){
