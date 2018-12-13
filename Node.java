@@ -1,17 +1,26 @@
 public class Node{
- private int data;
+ private Integer data;
  private Node next,prev;
- public Node(int val, Node next_, Node prev_){
+ public Node(Integer val, Node next_, Node prev_){
    data = val;
    next = next_;
    prev = prev_;
  }
- public Node getNext(){
+ /**
+    Node next()
+    Node prev()
+    void setNext(Node other)
+    void setPrev(Node other)
+    Integer getData()
+    Integer setData(Integer i)
+    String toString()
+ **/
+ public Node next(){
    return next;
  }
 
- public int getData(){
-   return data;
+ public Node prev(){
+   return prev;
  }
 
  public void setNext(Node newNext){
@@ -21,4 +30,26 @@ public class Node{
  public void setPrev(Node newPrev){
    prev = newPrev;
  }
+
+ public Integer getData(){
+   return data;
+ }
+
+ public Integer setData(Integer i){
+   Integer oldData = data;
+   data = i;
+   return oldData;
+ }
+
+ public String toString(){
+   String toReturn;
+   if (this == null){
+     toReturn = "";
+   }
+   else{
+     toReturn = "" + data;
+   }
+   return toReturn;
+ }
+
 }

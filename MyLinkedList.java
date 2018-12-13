@@ -3,48 +3,58 @@ public class MyLinkedList{
  private Node start,end;
 
  public static void main(String[] args){
-   Node a = new Node(1, null, null);
-   MyLinkedList list = new MyLinkedList(1, a, a);
+   MyLinkedList list = new MyLinkedList();
    System.out.println(list.toString());
    list.add(4);
    list.add(23);
    System.out.println(list.toString());
  }
 
- public MyLinkedList(int size_, Node start_, Node end_){
-   size = size_;
-   if (start_ == end_){
-     size = 1;
-   }
-   if (start_ == null && end_ == null){
-     size = 0;
-   }
-   start = start_;
-   end = end_;
+ public MyLinkedList(){
+   size = 0;
+   start = null;
+   end = null;
  }
+
  public int size(){
    return size;
  }
- public boolean add(int value){
-   Node temp = new Node(value, null, end);
-   end.setNext(temp);
-   end = temp;
-   size += 1;
+
+ public boolean add(Integer value){
+   Node toAdd = new Node(value, null, null);
+   if (start == null && end == null){
+     start = toAdd;
+     end = toAdd;
+   }
+   else{
+     end.setNext(toAdd);
+     toAdd.setNext(null);
+     toAdd.setPrev(end);
+     end = toAdd;
+   }
+   size+=1;
+   System.out.println("added " + toAdd.toString());
    return true;
  }
  public String toString(){
-   Node current = start;
-   String toReturn = "{";
-   if (start != null){
-   toReturn += current.getData() + ",";
+   String toReturn;
+   if (start == null && end == null){
+     toReturn = "{}";
+     return toReturn;
    }
-   while (current.getNext() != null){
-     current = current.getNext();
-     toReturn += " " + current.getData();
-     if (current.getNext() != null){
-       toReturn += ",";
-     }
-   };
+   if (start == end){
+     toReturn = "{" + start.toString() + "}";
+     return toReturn;
+   }
+   System.out.println("at line 49");
+   Node current = start.next();
+   System.out.println("at line 51");
+   toReturn = "{" + start.toString();
+   System.out.println("at line 53");
+   while (current != null){
+     toReturn += ", " + current.toString();
+     current = current.next();
+   }
    toReturn += "}";
    return toReturn;
  }
