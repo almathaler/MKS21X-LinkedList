@@ -1,10 +1,61 @@
 import java.util.NoSuchElementException;
 import java.lang.IndexOutOfBoundsException;
 public class MyLinkedList{
+  public class Node{
+   private Integer data;
+   private Node next,prev;
+   public Node(Integer val, Node next_, Node prev_){
+     data = val;
+     next = next_;
+     prev = prev_;
+   }
+   /**
+      Node next()
+      Node prev()
+      void setNext(Node other)
+      void setPrev(Node other)
+      Integer getData()
+      Integer setData(Integer i)
+      String toString()
+   **/
+   public Node next(){
+     return next;
+   }
 
+   public Node prev(){
+     return prev;
+   }
 
+   public void setNext(Node newNext){
+     next = newNext;
+   }
 
+   public void setPrev(Node newPrev){
+     prev = newPrev;
+   }
 
+   public Integer getData(){
+     return data;
+   }
+
+   public Integer setData(Integer i){
+     Integer oldData = data;
+     data = i;
+     return oldData;
+   }
+
+   public String toString(){
+     String toReturn;
+     if (this == null){
+       toReturn = "";
+     }
+     else{
+       toReturn = "" + data;
+     }
+     return toReturn;
+   }
+
+  }
  private int size;
  private Node start,end;
 
@@ -94,9 +145,9 @@ public class MyLinkedList{
    if (i >= size || i < 0){ //same explanation for get
      throw new IndexOutOfBoundsException("SETrequested index out of bounds: " + i);
    }
-   Integer toReturn = this.get(i); //we return the old value, getting old value is 0(N)
-   getNthNode(i).setData(value); //another linear pass
-   return toReturn; //return old value
+   //Integer toReturn = this.get(i); //we return the old value, getting old value is 0(N)
+   //getNthNode(i).setData(value); //another linear pass
+   return getNthNode(i).setData(value); //return old value
  }
 
  public boolean contains(Integer value){
@@ -128,6 +179,12 @@ public class MyLinkedList{
    if (index == size){
      this.add(value);
    }
+   else if (index == 0){
+     Node toAdd = new Node(value, start, null);
+     start.setPrev(toAdd);
+     start = toAdd;
+     size +=1;
+   }
    else{ //check, adding to the beginning of the list will make error since index-1 is outofbounds
      Node toAdd = new Node(value, this.getNthNode(index), this.getNthNode(index-1));
      this.getNthNode(index).setPrev(toAdd);
@@ -143,9 +200,11 @@ public class MyLinkedList{
    Integer toReturn = this.get(index);
    if (index == size-1){
      end = end.prev();
+     end.setNext(null); //if this wasn't done, toString would print out old ends
    }
    else if (index == 0){
      start = start.next();
+     start.setPrev(null);
    }
    else{
      //you have to reset the prev first, because getNthNode depends on the setNext to get node. once you setNext from the previous
@@ -165,27 +224,27 @@ public class MyLinkedList{
    }catch(IndexOutOfBoundsException e){
      return false;
    }
-   size-=1;
+   //size-=1; if this was kept, removing by value would make size-=2
    return true;
  }
 
  public String toString(){
    String toReturn;
    if (start == null && end == null){
-     toReturn = "{}";
+     toReturn = "[]";
      return toReturn;
    }
    if (start == end){
-     toReturn = "{" + start.toString() + "}";
+     toReturn = "[" + start.toString() + "]";
      return toReturn;
    }
    Node current = start.next();
-   toReturn = "{" + start.toString();
+   toReturn = "[" + start.toString();
    while (current != null){
      toReturn += ", " + current.toString();
      current = current.next();
    }
-   toReturn += "}";
+   toReturn += "]";
    return toReturn;
  }
 }
