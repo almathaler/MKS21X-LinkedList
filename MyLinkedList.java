@@ -85,6 +85,14 @@ public class MyLinkedList{
      }
      System.out.println(list.toString());
      System.out.println(list.debugToString());
+     System.out.println("making new string with - values");
+     MyLinkedList toAdd = new MyLinkedList();
+     for (int i = 1; i<10; i++){
+       toAdd.add(Integer.valueOf(0-i));
+     }
+     list.extend(toAdd);
+     System.out.println("Now, list: " + list.toString());
+     System.out.println(list.debugToString());
    }catch(IndexOutOfBoundsException e){
      System.out.println(e);
    }
@@ -227,6 +235,18 @@ public class MyLinkedList{
    //size-=1; if this was kept, removing by value would make size-=2
    return true;
  }
+
+ public void extend(MyLinkedList other){
+    end.setNext(other.start);
+    other.start.setPrev(end);
+    end = other.end;
+    size += other.size;
+    other.clear();
+        //in O(1) runtime, move the elements from other onto the end of this
+        //The size of other is reduced to 0
+        //The size of this is now the combined sizes of both original lists
+    }
+
 
  public String toString(){
    String toReturn;
