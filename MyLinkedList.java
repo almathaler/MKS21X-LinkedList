@@ -55,6 +55,11 @@ public class MyLinkedList{
      return toReturn;
    }
 
+   public String debugToString(){
+    String toReturn;
+    toReturn = "(" + prev + ")" + data + "(" + next + ")";
+    return toReturn;
+   }
   }
  private int size;
  private Node start,end;
@@ -62,32 +67,24 @@ public class MyLinkedList{
  public static void main(String[] args){
    try{
      MyLinkedList list = new MyLinkedList();
+     for (int i = 0; i<15; i++){
+       list.add(Integer.valueOf(i));
+     }
+     System.out.println("This is list: " + list.toString());
+     System.out.println("This is list backwards: " + list.reverseToString());
+     System.out.println("This is debug list: " + list.debugToString());
+     System.out.println("Adding 101, 103, 105 ... 111 to the odd indexes of list");
+     for (int i = 1; i<12; i+=2){
+       list.add(i, Integer.valueOf(i+100));
+     }
      System.out.println(list.toString());
-     list.add(4);
-     list.add(23);
+     System.out.println(list.debugToString());
+     System.out.println("Now removing a few numbers");
+     for (int i = 1; i<12; i+=2){
+       list.remove(i);
+     }
      System.out.println(list.toString());
-     System.out.println("" + list.size());
-     System.out.println("0th index: " + list.get(0));
-     System.out.println("1st index: " + list.get(1));
-     //System.out.println("2nd index: " + list.get(2));
-     list.set(1, 34);
-     System.out.println("set 1st index to 34, proof: " + list.get(1));
-     System.out.println(list.toString());
-     System.out.println("Does this list contain 4?: " + list.contains(4));
-     System.out.println("What about 5?: " + list.contains(5));
-     System.out.println("What's the index of 34?: " + list.indexOf(34));
-     System.out.println("What's the index of 568?: " + list.indexOf(568));
-     list.add(1, 65);
-     System.out.println("Added 65: " + list.toString());
-     System.out.println("Current size: " + list.size());
-     list.remove(1);
-     System.out.println("Removed 65: " + list.toString());
-     Integer intObj1 = Integer.valueOf(34);
-     list.remove(intObj1);
-     System.out.println("Removed 34 using remove by type: " + list.toString());
-     list.clear();
-     System.out.println("Cleared the list. What does it look like?: " + list.toString());
-     System.out.println("Tried getting 1st index value: " + list.get(1));
+     System.out.println(list.debugToString());
    }catch(IndexOutOfBoundsException e){
      System.out.println(e);
    }
@@ -187,9 +184,10 @@ public class MyLinkedList{
      size +=1;
    }
    else{ //check, adding to the beginning of the list will make error since index-1 is outofbounds
-     Node toAdd = new Node(value, this.getNthNode(index), this.getNthNode(index-1));
-     this.getNthNode(index).setPrev(toAdd);
-     this.getNthNode(index-1).setNext(toAdd);
+     Node addTo = getNthNode(index);
+     Node toAdd = new Node(value, addTo, addTo.prev());
+     addTo.prev().setNext(toAdd);
+     addTo.setPrev(toAdd);
      size+=1;
    }
  }
@@ -210,8 +208,9 @@ public class MyLinkedList{
    else{
      //you have to reset the prev first, because getNthNode depends on the setNext to get node. once you setNext from the previous
      //to pass over the current one, (index+1) is now out of bounds in some cases, like removing a middle element from a list of length 3
-     getNthNode(index+1).setPrev(getNthNode(index-1));
-     getNthNode(index-1).setNext(getNthNode(index+1));
+     Node toRemove = getNthNode(index);
+     toRemove.next().setPrev(toRemove.prev());
+     toRemove.prev().setNext(toRemove.next());
      //getNthNode(index+1).setPrev(getNthNode(index-1));
    }
    size-=1;
@@ -243,6 +242,38 @@ public class MyLinkedList{
    toReturn = "[" + start.toString();
    while (current != null){
      toReturn += ", " + current.toString();
+     current = current.next();
+   }
+   toReturn += "]";
+   return toReturn;
+ }
+
+ public String reverseToString(){
+   String toReturn;
+   if (start == null && end == null){
+     toReturn = "[]";
+     return toReturn;
+   }
+   if (start == end){
+     toReturn = "[" + start.toString() + "]";
+     return toReturn;
+   }
+   Node current = end.prev();
+   toReturn = "[" + end.toString();
+   while (current != null){
+     toReturn += ", " + current.toString();
+     current = current.prev();
+   }
+   toReturn += "]";
+   return toReturn;
+ }
+
+ public String debugToString(){
+   String toReturn;
+   Node current = start.next();
+   toReturn = "[" + start.debugToString();
+   while (current != null){
+     toReturn += ", " + current.debugToString();
      current = current.next();
    }
    toReturn += "]";
