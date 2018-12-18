@@ -87,6 +87,7 @@ public class MyLinkedList{
      System.out.println("Removed 34 using remove by type: " + list.toString());
      list.clear();
      System.out.println("Cleared the list. What does it look like?: " + list.toString());
+     System.out.println("Tried getting 1st index value: " + list.get(1));
    }catch(IndexOutOfBoundsException e){
      System.out.println(e);
    }
